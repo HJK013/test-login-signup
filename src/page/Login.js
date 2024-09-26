@@ -4,10 +4,12 @@ import InputField from '../components/InputField';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
 import UserForm from '../components/UserForm';
+import ErrorMessage, { validatePassword } from '../components/ErrorMessage';
 
 const Login = () => {
   const [idValue, setIdValue] = useState('');
   const [pwValue, setPwValue] = useState('');
+  const [error, setError] = useState('');
 
 
   const formData = {
@@ -29,8 +31,16 @@ const Login = () => {
     bt_msg : "로그인",
     link_msg : "회원가입",
     link: "/signup"
-    
  };
+
+ const handleLogin = () => {
+  if (idValue !== 'correctId' || pwValue !== 'correctPassword') {
+    setError('아이디나 비밀번호를 확인하세요');
+  } else {
+    setError('');
+    // 로그인 성공했을 때의 로직 추후 추가
+  }
+};
 
  return (
      <UserForm formData={formData}/>
