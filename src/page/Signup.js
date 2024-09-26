@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
 import UserForm from '../components/UserForm';
+import ErrorMessage, { validatePassword } from '../components/ErrorMessage';
 
 const Signup = () => {
   const [idValue, setIdValue] = useState('');
@@ -18,6 +19,7 @@ const Signup = () => {
       setError(''); // 추후 (사용자가입력한비번에따른) 회원가입 처리 로직 추가해야 함 !!
     }
   };
+  
 
   const formData = {
     fr_title : "회원가입",
@@ -32,12 +34,14 @@ const Signup = () => {
        type="password" 
        placeholder="비밀번호" 
        setState = {setPwValue} 
+       hasError={!!error}
        key="password"
       />,
       <InputField 
        type="password" 
        placeholder="비밀번호 확인" 
        setState = {setConfirmPwValue} 
+       hasError={!!error}
        key="confirm_password"
        />
 
@@ -49,10 +53,14 @@ const Signup = () => {
  };
 
 
-  return (
-    <UserForm formData={formData} handleSubmit={handleSubmit}/>
-  );
+ return (
+  <div>
+    <UserForm formData={formData} handleSubmit={handleSubmit} />
+    {error && <ErrorMessage>{error}</ErrorMessage>}
+  </div>
+);
 };
+
 
 const CenteredContainer = styled.div`
   display: flex;
