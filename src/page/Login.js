@@ -1,51 +1,37 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
-import { Link } from 'react-router-dom';
-import UserForm from '../components/UserForm';
-import ErrorMessage, { validatePassword } from '../components/ErrorMessage';
-import api from '../api';
+import ErrorMessage from '../components/ErrorMessage';
+import { login } from '../api';
 
 const Login = () => {
-  const [idValue, setIdValue] = useState('');
-  const [pwValue, setPwValue] = useState('');
-  const [error, setError] = useState('');
+    const [formData, setFormData] = useState({ id: '', password: '' });
+    const [error, setError] = useState('');
 
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
-  const formData = {
-    fr_title : "로그인",
-    inputs : [
-     <InputField 
-       type="text" 
-       placeholder="아이디" 
-       setState = {setIdValue}
-       key="id"
-     />,
-     <InputField 
-       type="password" 
-       placeholder="비밀번호" 
-       setState = {setPwValue}
-       key="password"
-     />
-    ],
-    bt_msg : "로그인",
-    link_msg : "회원가입",
-    link: "/signup"
- };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const data = await login(formData);
+            alert('로그인 성공!');
+            console.log('Access Token:', data.accessToken);
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
- const handleLogin = () => {
-  try {
-    if (idValue !== 'correctId' || pwValue !== 'correctPassword') {
-      throw new Error('아이디나 비밀번호를 확인하세요');
-    }
-    setError(''); // 로그인 성공 시 오류메시지 초기화하는일
-    // 로그인 성공했을 때의 로직 추후 추가
-  } catch (err) {
-    setError(err.message);
-  }
+    return (
+        <form onSubmit={handleSubmit}>
+            <InputField type="text" name="id" placeholder="ID" onChange={handleChange} />
+            <InputField type="password" name="password" placeholder="Password" onChange={handleChange} />
+            <Button type="submit">로그인</Button>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+        </form>
+    );
 };
-}
 
 
 const CenteredContainer = styled.div`
