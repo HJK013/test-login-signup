@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import { Link } from 'react-router-dom';
 import UserForm from '../components/UserForm';
 import ErrorMessage, { validatePassword } from '../components/ErrorMessage';
+import api from '../api';
 
 const Login = () => {
   const [idValue, setIdValue] = useState('');
@@ -34,18 +35,17 @@ const Login = () => {
  };
 
  const handleLogin = () => {
-  if (idValue !== 'correctId' || pwValue !== 'correctPassword') {
-    setError('아이디나 비밀번호를 확인하세요');
-  } else {
-    setError('');
+  try {
+    if (idValue !== 'correctId' || pwValue !== 'correctPassword') {
+      throw new Error('아이디나 비밀번호를 확인하세요');
+    }
+    setError(''); // 로그인 성공 시 오류메시지 초기화하는일
     // 로그인 성공했을 때의 로직 추후 추가
+  } catch (err) {
+    setError(err.message);
   }
 };
-
- return (
-     <UserForm formData={formData}/>
- );
-};
+}
 
 
 const CenteredContainer = styled.div`
