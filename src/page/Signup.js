@@ -4,6 +4,7 @@ import InputField from '../components/InputField';
 import Button from '../components/Button';
 import UserForm from '../components/UserForm';
 import ErrorMessage, { validatePassword } from '../components/ErrorMessage';
+import api from '../api';
 
 const Signup = () => {
   const [idValue, setIdValue] = useState('');
@@ -11,12 +12,28 @@ const Signup = () => {
   const [confirmPwValue, setConfirmPwValue] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const passwordErrors = validatePassword(pwValue);
+    if (passwordErrors.length > 0) {
+      setError(passwordErrors.join(' '));
+      return;
+    }
     if (pwValue !== confirmPwValue) {
       setError('*위와 정확히 같은 비밀번호를 입력해주세요');
-    } else {
-      setError(''); // 추후 (사용자가입력한비번에따른) 회원가입 처리 로직 추가해야 함 !!
+      return;
+    }
+
+    try {
+      setError(''); // 오류 메시지 초기화
+      const response = await api.post('/signup', { id: idValue, password: pwValue }); // api.post를 사용해 회원가입 요청 보낼수있게
+      // ㅊ후 회원가입 성공 로직 추가-!
+    } catch (err) {
+      if (err.response) {
+        setError(err.response.data.message);
+      } else {
+        setError('회원가입에 실패했습니다. 다시 시도해주세요.');
+      }
     }
   };
   
@@ -84,3 +101,4 @@ const SignupCard = styled.div`
 `;
 
 export default Signup;
+
