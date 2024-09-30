@@ -1,81 +1,37 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
 import UserForm from '../components/UserForm';
-import ErrorMessage, { validatePassword } from '../components/ErrorMessage';
-import api from '../api';
+import ErrorMessage from '../components/ErrorMessage';
+import { signup } from '../api';
 
 const Signup = () => {
-  const [idValue, setIdValue] = useState('');
-  const [pwValue, setPwValue] = useState('');
-  const [confirmPwValue, setConfirmPwValue] = useState('');
-  const [error, setError] = useState('');
+    const [formData, setFormData] = useState({ id: '', email: '', password: '' });
+    const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const passwordErrors = validatePassword(pwValue);
-    if (passwordErrors.length > 0) {
-      setError(passwordErrors.join(' '));
-      return;
-    }
-    if (pwValue !== confirmPwValue) {
-      setError('*위와 정확히 같은 비밀번호를 입력해주세요');
-      return;
-    }
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
-    try {
-      setError(''); // 오류 메시지 초기화
-      const response = await api.post('/signup', { id: idValue, password: pwValue }); // api.post를 사용해 회원가입 요청 보낼수있게
-      // ㅊ후 회원가입 성공 로직 추가-!
-    } catch (err) {
-      if (err.response) {
-        setError(err.response.data.message);
-      } else {
-        setError('회원가입에 실패했습니다. 다시 시도해주세요.');
-      }
-    }
-  };
-  
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await signup(formData);
+            alert('회원가입 성공!');
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
-  const formData = {
-    fr_title : "회원가입",
-    inputs : [
-     <InputField 
-       type="text" 
-       placeholder="아이디" 
-       setState = {setIdValue}
-       key="id"
-     />,
-     <InputField 
-       type="password" 
-       placeholder="비밀번호" 
-       setState = {setPwValue} 
-       hasError={!!error}
-       key="password"
-      />,
-      <InputField 
-       type="password" 
-       placeholder="비밀번호 확인" 
-       setState = {setConfirmPwValue} 
-       hasError={!!error}
-       key="confirm_password"
-       />
-
-    ],
-    bt_msg : "회원가입",
-    link_msg : "로그인",
-    link: "/",
-    error: error
- };
-
-
- return (
-  <div>
-    <UserForm formData={formData} handleSubmit={handleSubmit} />
-    {error && <ErrorMessage>{error}</ErrorMessage>}
-  </div>
-);
+    return (
+        <form onSubmit={handleSubmit}>
+            <InputField type="text" name="id" placeholder="ID" onChange={handleChange} />
+            <InputField type="email" name="email" placeholder="Email" onChange={handleChange} />
+            <InputField type="password" name="password" placeholder="Password" onChange={handleChange} />
+            <Button type="submit">회원가입</Button>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+        </form>
+    );
 };
 
 
@@ -101,4 +57,3 @@ const SignupCard = styled.div`
 `;
 
 export default Signup;
-
