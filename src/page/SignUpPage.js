@@ -25,11 +25,11 @@ const SignUpPage = () => {
       e.preventDefault();
       try {
           const response = await axios.post(`${SERVER_URL}/users`, userData);
-          console.log(response.status);      // 회원가입 성공 시 http 상태 코드만 보내줌
+          console.log(response.status); 
           alert('회원가입 성공!');
-          setUser(response.data); // 사용자 정보 업데이트
+          setUser(response.data); 
       } catch (err) {
-          setError(err.response.data.message);   // 백엔드에서 회원가입 실패 원인을 알려줌
+          setError(err.response.data.message); 
       }
   }
 
