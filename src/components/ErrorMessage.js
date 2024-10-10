@@ -21,14 +21,15 @@ const ErrorMessage = styled.div`
   margin-top: 5px;
 `;
 
-const StyledInput = styled.input`
-  border: 1px solid ${props => (props.hasError ? 'red' : '#FF0000')};
-  padding: 8px;
-  margin-bottom: 8px;
-  &:focus {
-    outline: none;
-    border-color: ${props => (props.hasError ? 'red' : '#FF0000')};
-  }
-`;
+// const StyledInput = styled.input`
+//   border: 1px solid ${props => (props.hasError ? 'red' : '#FF0000')};
+//   padding: 8px;
+//   margin-bottom: 8px;
+//   &:focus {
+//     outline: none;
+//     border-color: ${props => (props.hasError ? 'red' : '#FF0000')};
+//   }
+// `;
 
 export default ErrorMessage;
+export { validatePassword }; // validatePassword 함수 내보내기
